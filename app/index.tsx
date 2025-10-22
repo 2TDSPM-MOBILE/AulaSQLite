@@ -1,5 +1,6 @@
 import { deleteNote, getNotes } from "@/src/db/notes";
 import { useFocusEffect, useRouter } from "expo-router";
+import { MotiView } from "moti";
 import { useCallback, useState } from "react";
 import { Button, FlatList, Text, View } from "react-native";
 
@@ -26,7 +27,12 @@ export default function HomeScreen() {
       <FlatList
         data={notes}
         renderItem={({ item }) => (
-          <View style={{borderBottomWidth:1, padding:10,marginBottom:5}}>
+          <MotiView 
+            from={{opacity:0}}
+            animate={{opacity:1}}
+            transition={{delay:500}}
+            style={{borderBottomWidth:1, padding:10,marginBottom:5}}
+          >
             <Text style={{fontSize:16,fontWeight:'bold'}}>{item.title}</Text>
             <Text>{item.content} - ID:{item.id}</Text>
             <View style={{flexDirection:'row',gap:5}}>
@@ -42,7 +48,7 @@ export default function HomeScreen() {
                   color='red' 
                   onPress={()=>handleDelete(item.id)}/>              
             </View>
-          </View>
+          </MotiView>
         )}
       />
     </View>
