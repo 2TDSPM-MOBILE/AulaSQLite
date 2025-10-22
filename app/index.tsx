@@ -1,6 +1,6 @@
 import { deleteNote, getNotes } from "@/src/db/notes";
 import { useFocusEffect, useRouter } from "expo-router";
-import { MotiView } from "moti";
+import { MotiView,MotiText } from "moti";
 import { useCallback, useState } from "react";
 import { Button, FlatList, Text, View } from "react-native";
 
@@ -26,14 +26,19 @@ export default function HomeScreen() {
       <Button title="Adicionar nota" onPress={() => router.push("/add")} />
       <FlatList
         data={notes}
-        renderItem={({ item }) => (
+        renderItem={({ item,index }) => (
           <MotiView 
-            from={{opacity:0}}
-            animate={{opacity:1}}
-            transition={{delay:500}}
+            from={{opacity:0,translateY:20}}
+            animate={{opacity:1,translateY:0}}
+            transition={{delay:index*100}}
             style={{borderBottomWidth:1, padding:10,marginBottom:5}}
           >
-            <Text style={{fontSize:16,fontWeight:'bold'}}>{item.title}</Text>
+            <MotiText 
+              from={{scale:0.85}}
+              animate={{scale:1}}
+              transition={{type:"timing",duration:1000}}
+              style={{fontSize:16,fontWeight:'bold'}}>{item.title}
+            </MotiText>
             <Text>{item.content} - ID:{item.id}</Text>
             <View style={{flexDirection:'row',gap:5}}>
               {/* Botão de editar a nota*/}              

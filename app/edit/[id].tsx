@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Alert, Button, TextInput, View } from 'react-native'
+import { MotiView } from 'moti'
 //Importanto fuções do banco de dados
 import { getNotes, updateNote } from '@/src/db/notes'
 
@@ -46,7 +47,15 @@ export default function EditNoteScreen() {
         router.back()
     }
     return (
-        <View style={{ flex: 1, padding: 20 }}>
+        <MotiView 
+            from={{opacity:0,translateY:40}}
+            animate={{opacity:1,translateY:0}}
+            transition={{
+                type:"timing",
+                duration:500
+            }}
+            style={{ flex: 1, padding: 20 }}
+        >
             <TextInput
                 placeholder="Título"
                 value={title}
@@ -72,6 +81,6 @@ export default function EditNoteScreen() {
             />
 
             <Button title="Atualizar" onPress={handleUpdate} />
-        </View>
+        </MotiView>
     )
 }

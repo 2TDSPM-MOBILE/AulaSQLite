@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Button, TextInput, View,Alert } from "react-native";
 import { addNote } from "@/src/db/notes";
+import { MotiView,MotiText } from "moti";
 
 export default function AddNoteScreen(){
     const[title,setTitle]=useState('')
@@ -22,19 +23,30 @@ export default function AddNoteScreen(){
     }
     return(
         <View style={{flex:1,padding:20}}>
-            <TextInput
-                placeholder="Título"
-                value={title}
-                onChangeText={(value)=>setTitle(value)}
-                style={{
+            <MotiView
+                from={{opacity:0,translateX:-30}}
+                animate={{opacity:1,translateX:0}}
+                transition={{delay:300}}
+            >
+                <TextInput
+                 placeholder="Título"
+                 value={title}
+                 onChangeText={(value)=>setTitle(value)}
+                 style={{
                     borderWidth:1,
                     padding:10,marginBottom:10,
                     borderRadius:6
                 }}
-            />
-
-            {/* TextInput do Conteúdo */}
-             <TextInput
+                />
+            </MotiView>
+             
+             
+            <MotiView
+                from={{opacity:0,translateX:30}}
+                animate={{opacity:1,translateX:0}}
+                transition={{delay:300}}
+            >
+                <TextInput
                 placeholder="Conteúdo"
                 value={content}
                 onChangeText={(value)=>setContent(value)}
@@ -45,8 +57,20 @@ export default function AddNoteScreen(){
                     borderRadius:6
                 }}
             />
-
-            <Button title="Salvar" onPress={handleSave} />
+            </MotiView>
+           
+            <MotiView
+                from={{scale:1}}
+                animate={{scale:1.1}}
+                transition={{
+                    loop:true,
+                    type:"timing",
+                    duration:2000
+                }}
+            >
+                <Button title="Salvar" onPress={handleSave} />
+            </MotiView>
+            
         </View>
     )
 }
