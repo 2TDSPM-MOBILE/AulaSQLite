@@ -3,10 +3,13 @@ import { useState } from "react";
 import { Button, TextInput, View,Alert } from "react-native";
 import { addNote } from "@/src/db/notes";
 import { MotiView,MotiText } from "moti";
+import { generateTitleFromContentHF } from "@/src/ia/generateTitleHF";
+
 
 export default function AddNoteScreen(){
     const[title,setTitle]=useState('')
     const[content,setContent]=useState('')
+    const[loading,setLoading]=useState(false)
     const router = useRouter()//Hook de navegação
 
     //Função chamada quando pressionado o botão salvar
@@ -21,6 +24,20 @@ export default function AddNoteScreen(){
         router.back()//Retorna para a tela inicial
 
     }
+    //Função para gerar título com IA
+    async function handleGenerateTitle() {
+        if(!content.trim()){
+            Alert.alert("Atenção","Digita alguma no conteúdo antes de gerar o título automático.")
+            return
+        }
+        setLoading(true)
+        const generated = await generateTitleFromContentHF(content)
+        if(generated){
+            setTitle(generated)
+            setLoading(false)
+        }
+    }
+
     return(
         <View style={{flex:1,padding:20}}>
             <MotiView
@@ -57,6 +74,24 @@ export default function AddNoteScreen(){
                     borderRadius:6
                 }}
             />
+            </MotiView>
+
+            <MotiView
+                style={{marginBottom:10}}
+                from={{scale:1}}
+                animate={{scale:1.1}}
+                transition={{
+                    loop:true,
+                    type:"timing",
+                    duration:2000
+                }}
+            >
+                <Button 
+                    title="Gerar Título com IA" 
+                    onPress={handleGenerateTitle}
+                    color="orange"
+                    disabled={loading}
+                />
             </MotiView>
            
             <MotiView
