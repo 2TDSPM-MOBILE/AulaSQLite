@@ -4,12 +4,14 @@ import { Button, TextInput, View,Alert } from "react-native";
 import { addNote } from "@/src/db/notes";
 import { MotiView,MotiText } from "moti";
 import { generateTitleFromContentHF } from "@/src/ia/generateTitleHF";
-
+import { translateToEnglish } from "@/src/services/translationService";
 
 export default function AddNoteScreen(){
     const[title,setTitle]=useState('')
     const[content,setContent]=useState('')
     const[loading,setLoading]=useState(false)
+    const[translated,setTranslated]=useState("")
+    const[loadingTranslate,setLoadingTranslate]=useState(false)
     const router = useRouter()//Hook de navegação
 
     //Função chamada quando pressionado o botão salvar
@@ -35,6 +37,25 @@ export default function AddNoteScreen(){
         if(generated){
             setTitle(generated)
             setLoading(false)
+        }
+    }
+    async function handleTranslation() {
+        if(!content.trim()){
+            Alert.alert("Atenção","Digite algum conteúdo antes de traduzir")
+            return
+        }
+        try{
+            setLoadingTranslate(true)
+
+            const result = await translateToEnglish(content)
+            
+            setTranslated(result)
+
+            if(!result){
+                Alert.alert("Aviso","Não foi possível obter a tradução.")
+            }
+        }catch(error){
+            console.log("Erro ao traduzir ",error)
         }
     }
 
@@ -74,6 +95,43 @@ export default function AddNoteScreen(){
                     borderRadius:6
                 }}
             />
+            </MotiView>
+
+            <MotiView
+                from={{opacity:0,translateX:30}}
+                animate={{opacity:1,translateX:0}}
+                transition={{delay:300}}
+            >
+                <TextInput
+                placeholder="Translation to English"
+                value={translated}
+                onChangeText={(value)=>setTranslated(value)}
+                multiline
+                editable={false}
+                style={{
+                    borderWidth:1,height:120,
+                    padding:10,marginBottom:10,
+                    borderRadius:6
+                }}
+            />
+            </MotiView>
+
+            <MotiView
+                style={{marginBottom:10}}
+                from={{scale:1}}
+                animate={{scale:1.1}}
+                transition={{
+                    loop:true,
+                    type:"timing",
+                    duration:2000
+                }}
+            >
+                <Button 
+                    title="Traduzir para o Inglês" 
+                    onPress={handleTranslation}
+                    color="orange"
+                    disabled={loadingTranslate}
+                />
             </MotiView>
 
             <MotiView
